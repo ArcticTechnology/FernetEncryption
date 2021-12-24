@@ -1,4 +1,5 @@
 import os; import base64;
+from getpass import getpass
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -19,26 +20,21 @@ class FernetEnc:
 		del password; del pass_byte
 		return token
 
-	def _prepend_salt(self, encryption_results):
-		if encryption_results['status'] != 200: return encryption_results['message']
+	def prepend_salt(self, cipher):
+		if cipher['status'] != 200: return cipher['message']
 
-		output = encryption_results['output']
+		output = cipher['output']
 
 		return output['hash'] + '.' + output['salt']
 
-	def _extract_salt(self, message):
+	def extract_salt(self, message):
 		if '.' in message:
 			extension = os.path.splitext(message)[-1]
 			return extension[1:]
 		else:
 			raise ValueError('Error: Failed to extract salt.')
 
-	def fernet_enc(self, message, password, salt=None, decrypt=False):
-		"""
-		Example data inputs:
-		data = {'medium': 'file', 'input': '/filepath/example', 'outpath': '/example-c', 'salt': None}
-		data = {'medium': 'text', 'input': 'hello world', 'outpath': None, 'salt': None}
-		"""
+	def encrypt(self, password, message, salt=None, decrypt=False):
 		result = {'status': None, 'message': None, 'output':{}}
 
 		#=== Create Salt ===
@@ -82,3 +78,91 @@ class FernetEnc:
 
 		del password
 		return result
+
+class FernetEncGUI:
+
+	def __init__(self, fernetenc,):
+		self.fernetenc = fernetenc
+
+	def clear(self):
+		os.system('cls' if os.name=='nt' else 'clear')
+
+	def splashscreen(self):
+		self.clear()
+		print('Welcome to Fernet Encryption!')
+
+	def optionscreen(self):
+		print(' ')
+		print('What would you like to do?')
+		print('(e) Encrypt, (d) Decrypt, (q) Quit')
+
+	def option_enc(self, decrypt=False):
+		if decrypt == True:
+			keyword = 'Decrypt'
+		else:
+			keyword = 'Encrypt'
+		self.clear()
+		print('What is the message you want to {}?'.format(keyword.upper()))
+		print(' ')
+		message = input('Input your message: ')
+		if message == '': self.clear(); print('Exited, no action taken.'); return
+		print(' ')
+
+		password = getpass('Password: ')
+		if password == '':
+			self.clear(); print('Password cannot be blank, no action taken.'); return
+
+		if decrypt == True:
+			confirm = password
+		else:
+			print(' ')
+			confirm = getpass('Please confirm password: ')
+
+		self.clear()
+		if password != confirm: del password; del confirm; print('Password mismatch, no action taken.'); return
+
+		if decrypt == True:
+			salt = self.fernetenc.extract_salt(message)
+			data = self.fernetenc.encrypt(password=password,message=message,salt=salt,decrypt=decrypt)
+			if data['status'] != 200: self.clear(); print(data['message']); return
+			result = data['output']['hash']
+		else:
+			data = self.fernetenc.encrypt(password=password,message=message,decrypt=decrypt)
+			if data['status'] != 200: self.clear(); print(data['message']); return
+			result = self.fernetenc.prepend_salt(data)
+
+		print('Status: {}ion complete.'.format(keyword))
+		print(' ')
+
+		if decrypt == True:
+			print('====== Secret ======')
+			print(' ')
+			print(result)
+		else:
+			print('====== Cipher ======')
+			print(' ')
+			print(result)
+		del password; del confirm
+		input(); self.clear(); return
+
+	def run(self):
+		self.clear()
+		self.splashscreen()
+
+		while True:
+			self.optionscreen()
+			select = input()
+
+			if select not in ('e','d','q'):
+				#'(e) Encrypt, (d) Decrypt, (q) Quit'
+				self.clear(); print('Invalid selection. Try again.')
+
+			if select == 'q':
+				self.clear()
+				break
+
+			if select == 'e':
+				self.option_enc(decrypt=False)
+
+			if select == 'd':
+				self.option_enc(decrypt=True)

@@ -1,9 +1,10 @@
 #!/usr/bin/python3 -B
-from .fernetenc import FernetEnc
+from .fernetenc import FernetEnc, FernetEncGUI
 
 def main():
-	fernet = FernetEnc()
-	#starterpkg.run()
+	fernetenc = FernetEnc()
+	fernetenc_gui = FernetEncGUI(fernetenc)
+	fernetenc_gui.run()
 
 if __name__ == '__main__':
 	raise SystemExit(main())
