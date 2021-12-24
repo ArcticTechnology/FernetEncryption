@@ -2,8 +2,9 @@
 from fernetencryption import *
 
 def test_main():
-	fernet = FernetEnc()
-	#starterpkg.run()
+	fernetenc = FernetEnc()
+	fernetenc_gui = FernetEncGUI(fernetenc)
+	fernetenc_gui.run()
 
 if __name__ == '__main__':
 	raise SystemExit(test_main())
