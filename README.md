@@ -3,6 +3,23 @@ Python app for encrypting messages with fernet cryptography. This tool is primar
 * Github repo: https://github.com/ArcticTechnology/FernetEncryption
 * PyPi: https://pypi.org/project/FernetEncryption/
 
+## Prerequisites
+The Fernet Encryption app is intended for the Linux terminal and should work on it out of the box. For Windows and Mac its recommended to run this on the Git Bash terminal. Here are the instructions for installing and setting up Git Bash:
+
+1. Go to https://git-scm.com/downloads and click download.
+```
+Version >= 2.34.1
+```
+2. During the installation setup, make sure to include OpenSSH. Recommenced setting should be fine:
+```
+Use bundled OpenSSH - This uses ssh.exe that comes with Git.
+```
+3. Leave the other settings as default, click through, and install.
+
+IMPORTANT: For Windows, run this app on the ```bash.exe``` terminal rather ```git-bash.exe```. There is a known issue with ```git-bash.exe``` messing up Python ```os``` commands in ```import os```. See this thread for details: https://stackoverflow.com/questions/33622087/composer-installation-error-output-is-not-a-tty-input-is-not-a-tty/33623136#33623136.
+* ```bash.exe``` can be found in your Git folder in the ```bin/``` directory.
+* For example: If ```git-bash.exe``` is here ```C:\Program Files\Git\git-bash.exe``` then you should find ```bash.exe``` here ```C:\Program Files\Git\bin\bash.exe```.
+
 ## Installation
 This library is hosted on PyPi and can be installed via ```pip```:
 ```
