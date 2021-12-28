@@ -4,7 +4,17 @@ Python app for encrypting messages with fernet cryptography. This tool is primar
 * PyPi: https://pypi.org/project/FernetEncryption/
 
 ## Prerequisites
-The Fernet Encryption app is intended for the Linux terminal and should work on it out of the box. For Windows and Mac its recommended to run this on the Git Bash terminal. Here are the instructions for installing and setting up Git Bash:
+The Fernet Encryption app is intended for the Linux terminal and should work on it out of the box. However, you may need to add ```~/.local/bin/``` to PATH if you are getting a ```command not found``` error when trying to run the app. See this thread for details: https://stackoverflow.com/a/34947489. To add ```~/.local/bin/``` to PATH do the following:
+1. Add ```export PATH=~/.local/bin:$PATH``` to ```~/.bash_profile```.
+```
+echo export PATH=~/.local/bin:$PATH > ~/.bash_profile
+````
+2. Execute command.
+```
+source ~/.bash_profile
+```
+
+This app can work for Windows and Mac. It is recommended to run it on the Git Bash terminal. Here are the instructions for installing and setting up Git Bash:
 
 1. Go to https://git-scm.com/downloads and click download.
 ```
